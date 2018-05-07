@@ -1,5 +1,9 @@
-### cat-tier-showdown
+# cat-tier-showdown
 Inspired by the YouTube channel Tier Zoo, a battle royal of the cat class.
+
+### Motivation
+
+This web app is an exercise in creating dynamic web applications using JavaScript and jQuery.
 
 ### Cat Tier List RPG Game
 
@@ -41,7 +45,9 @@ Inspired by the YouTube channel Tier Zoo, a battle royal of the cat class.
 
 * Your players should be able to win and lose the game no matter what character they choose. The challenge should come from picking the right enemies, not choosing the strongest player.
 
-### Tech/Frameworks used
+### About the Code
+
+### Tech/Frameworks Used
 
 **Built with**
 

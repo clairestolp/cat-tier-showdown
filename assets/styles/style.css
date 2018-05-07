@@ -1,0 +1,60 @@
+header{
+  font-family: 'Do Hyeon';
+  font-size: 2em;
+  text-align: center;
+  padding: 20px;
+  margin: 10px;
+  margin-bottom: 30px;
+}
+
+p {
+  font-family: 'Prompt';
+}
+
+#logo{
+  font-family: 'Nanum Gothic';
+  font-size: 1.75em;
+  margin: 5px;
+  position: fixed;
+  top: 0px;
+}
+
+#logo a{
+  text-decoration: none;
+}
+
+#game{
+  max-width: 960px;
+  height: 450px;
+  padding: 25px 0px 25px 0px;
+  margin: auto;
+  background-color: #ccc;
+}
+
+.layout{
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+
+}
+
+.img-container {
+  width: 150px;
+  background-color: #ffffff;
+  margin: 5px;
+  padding: 5px;
+  text-align: center;
+}
+
+.img-container img{
+  height: 100px;
+  width: 150px;
+}
+
+.prompt-text{
+  text-align: center;
+  padding: 5px;
+}
