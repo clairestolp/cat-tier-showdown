@@ -1,3 +1,7 @@
+html, body{
+  background: url('../images/fieldGrass.jpg');
+}
+
 header{
   font-family: 'Do Hyeon';
   font-size: 2em;
@@ -7,8 +11,12 @@ header{
   margin-bottom: 30px;
 }
 
-p {
+p, div {
   font-family: 'Prompt';
+}
+
+div {
+  display: inline-block;
 }
 
 #logo{
@@ -24,14 +32,23 @@ p {
 }
 
 #game{
+  display: block;
   max-width: 960px;
   height: 450px;
   padding: 25px 0px 25px 0px;
   margin: auto;
-  background-color: #ccc;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: rgba(0,0,0,0.5);
 }
 
-.layout{
+#enemy, #player{
+  height: 300px;
+  width: 300px;
+  border: 5px solid #fff;
+}
+
+.layout-select{
   height: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -41,20 +58,63 @@ p {
 
 }
 
+.layout-battle{
+  height: 100%;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: space-around;
+
+}
+
 .img-container {
-  width: 150px;
   background-color: #ffffff;
   margin: 5px;
   padding: 5px;
   text-align: center;
 }
 
-.img-container img{
+.text-bg{
+  font-size: 4em;
+}
+
+.text-md{
+  font-size: 2em;
+}
+
+.text-white{
+  color: #ffffff;
+}
+
+.text-black{
+  color: #000;
+}
+
+.text-stat{
+  text-align: center;
+  padding: 5px;
+  margin: 5px;
+  background-color: #ffffff;
+}
+
+.vertical{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.thumbnail-md{
   height: 100px;
   width: 150px;
 }
 
+.thumbnail-sm{
+  height: 40px;
+  width: 65px;
+}
+
 .prompt-text{
-  text-align: center;
+  font-size: 1.25em;  text-align: center;
   padding: 5px;
+  color: #ffffff;
 }

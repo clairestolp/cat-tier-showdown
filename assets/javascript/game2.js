@@ -134,18 +134,15 @@ var showdown = {
     content
       .addClass('layout-battle')
       .append(player)
-      .append($('<p>', {class: 'text-bg'}).html('VS'));
+      .append($('<p>', {class: 'text-bg'}).html('VS'))
+      .append($('<div>', {id:'enemy'}));
 
     $('#game').append(content);
   },
   'generateEnemies': function () {
     var remaining = $('<div>', {id:'remaining'});
-    remaining
-      .addClass('text-white')
-      .append('Remaining Enemies');
-    $('#content')
-      .append($('<div>', {id:'enemy'}))
-      .append(remaining);
+    remaining.append('Remaining Enemies');
+    $('#content').append(remaining);
 
     //generates remaining enemies
     $.each(showdown.enemies, function (index) {
@@ -154,7 +151,7 @@ var showdown = {
       var img = $('<img>', {src:enemy.img1, alt:enemy.name});
 
       wrapper
-        .addClass('img-container hvr-pulse-grow text-black')
+        .addClass('img-container hvr-pulse-grow')
         .attr('value', index)
         .append(img)
         .append('<br>')
@@ -186,8 +183,7 @@ var showdown = {
       $('.img-container')
         .off('click')
         .removeClass('hvr-pulse-grow')
-        .css('background-color', 'rgba(192,192,192,0.5)')
-        .css('color', '#ffffff');
+        .css('background-color', '#666');
     });
   },
   "attack": function (player, opponent) {
@@ -195,54 +191,6 @@ var showdown = {
     opponent.hitPoints -= player.attackPower[0];
     //opponent counter attacks
     player.hitPoints -= opponent.counterAttack;
-  },
-  "newMatch": function(player) {
-      //generate enemies
-      showdown.generateEnemies();
-      //select an enemy set opponent
-      $('.img-container').on('click', function () {
-        var index = parseInt($(this).attr('value'));
-        showdown.selectOpponent(showdown.enemies[index]);
-        opponent = showdown.opponent;
-        console.log('opponent', opponent);
-      });
-      //attack enemy, enemy counter attack, doc reloads on lose
-      $('#enemy').on('click', function () {
-        showdown.attack(player, opponent);
-        //evaluate if player has hp left
-        if(player.hitPoints > 0){
-          $('#playerHP').html(`HP: ${player.hitPoints}`);
-        }else{
-          //player lost, document reloads
-          $('#playerHP').html(`HP: 0`);
-          alert('you lose');
-          return location.reload();
-        }
-        //evaluate if enemy has hp
-        if(opponent.hitPoints > 0){
-          $('#enemyHP').html(`HP: ${opponent.hitPoints}`);
-        }else{
-          //opponent is defeated
-          $('#enemyHP').html(`HP: 0`);
-          alert('you win!');
-          //update catTier so opponent is dead
-          showdown.catTier.forEach(function(cat){
-            if (cat.name === opponent.name){
-              cat.dead = true;
-            }
-          });
-          //update enemies and clear content
-          showdown.updateEnemies();
-          $('#enemy').remove();
-          $('#remaining').remove();
-          //run again if enemies remain
-          if(showdown.enemies.length > 0){
-            return showdown.newMatch(player, opponent);
-          }else{
-            alert('Cogratulations! you are now the strongest cat in the meta!');
-          }
-        }
-      });
   }
 };
 
@@ -252,9 +200,46 @@ $(document).ready(function() {
 
     $('.img-container').on('click', function(){
       showdown.selectPlayer($(this).val());
-      showdown.setupMatch();
       player = showdown.player;
+      showdown.setupMatch();
+      showdown.generateEnemies();
       console.log('player', player);
-      showdown.newMatch(player, opponent);
+
+      while(showdown.enemies.length > 0){
+        console.log(showdown.enemies);
+        $('.img-container').on('click', function () {
+          showdown.selectOpponent(showdown.enemies[parseInt($(this).attr('value'))]);
+          opponent = showdown.opponent;
+          console.log('opponent', opponent);
+        });
+
+        $('#enemy').on('click', function () {
+          showdown.attack(player, opponent);
+          if(player.hitPoints > 0){
+            $('#playerHP').html(`HP: ${player.hitPoints}`);
+          }else{
+            $('#playerHP').html(`HP: 0`);
+            alert('you lose');
+          }
+
+          if(opponent.hitPoints > 0){
+            $('#enemyHP').html(`HP: ${opponent.hitPoints}`);
+          }else{
+            $('#enemyHP').html(`HP: 0`);
+            alert('you win!');
+            showdown.catTier.forEach(function(cat){
+              if (cat.name === opponent.name){
+                cat.dead = true;
+              }
+            });
+            showdown.updateEnemies();
+            $('#enemy').remove();
+            $('#remaining').remove();
+            showdown.generateEnemies();
+          }
+        });
+      }
+
+
     });
 });
