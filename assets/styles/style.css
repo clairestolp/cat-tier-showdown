@@ -1,5 +1,9 @@
-html, body{
+html{
   background: url('../images/fieldGrass.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
 }
 
 header{
@@ -35,7 +39,7 @@ div {
   display: block;
   max-width: 960px;
   height: 450px;
-  padding: 25px 0px 25px 0px;
+  padding: 25px 15px 25px 15px;
   margin: auto;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -46,6 +50,29 @@ div {
   height: 300px;
   width: 300px;
   border: 5px solid #fff;
+  position: relative
+}
+
+#enemy p{
+  position: relative;
+  text-align: center;
+  top: 35%;
+}
+
+.hitBox{
+  height: 75px;
+  background-color: rgb(155, 14, 14);
+  color: #ffffff;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  margin: 5px;
+  padding: 5px;
+}
+
+.loopAnimation{
+ animation-delay: 7s;
+ animation-iteration-count: infinite;
 }
 
 .layout-select{

@@ -57,7 +57,7 @@ var showdown = {
       img1: './assets/images/mountain-lion-black-silhouette.png',
       img2: './assets/images/jaguar.jpg'
     }
-  ],
+],
   'enemies': [],
   'player': undefined,
   'opponent': undefined,
@@ -114,27 +114,28 @@ var showdown = {
     //instructions
     var prompt = $('<p>', {id:'prompt'});
     prompt
-      .html('choose a challenger.')
+      .html('choose an opponent.')
       .addClass('prompt-text');
     $('#game').append(prompt);
 
     //add player
     var content = $('<div>', {id:'content'});
-    var player = $('<div>', {id:'player'});
+    var playerDiv = $('<div>', {id:'player'});
     var playerImg = $('<img>', {src: showdown.player.img2, alt: showdown.player.name});
     var playerHP = $('<div>');
     playerHP
-      .html($(`<p id='playerHP'>HP: ${showdown.player.hitPoints}</p>`))
+      .html(`<p>HP: ${showdown.player.hitPoints}</p>`)
+      .attr('id', 'playerHP')
       .addClass('text-stat text-md');
 
-    player
+    playerDiv
       .append(playerImg)
       .append(playerHP);
 
     content
       .addClass('layout-battle')
-      .append(player)
-      .append($('<p>', {class: 'text-bg'}).html('VS'));
+      .append(playerDiv)
+      .append($('<p>', {class: 'text-bg text-white'}).html('VS'));
 
     $('#game').append(content);
   },
@@ -146,7 +147,8 @@ var showdown = {
     $('#content')
       .append($('<div>', {id:'enemy'}))
       .append(remaining);
-
+    $('#enemy')
+      .html('<p class="text-white text-bg">???</p>')
     //generates remaining enemies
     $.each(showdown.enemies, function (index) {
       var enemy = showdown.enemies[index];
@@ -178,8 +180,10 @@ var showdown = {
       .addClass('text-stat text-md');
     //append to enemy div
     $('#enemy')
+      .empty()
       .append($('<img>', {src:opponent.img2, alt:enemy.name}))
-      .append(opponentHP);
+      .append(opponentHP)
+      //.addClass('animated bounce loopAnimation');
     $('#prompt').html('Click your opponent to attack');
     //disable click
     $.each(showdown.enemies, function () {
@@ -193,10 +197,55 @@ var showdown = {
   "attack": function (player, opponent) {
     //attack opponent
     opponent.hitPoints -= player.attackPower[0];
-    //opponent counter attacks
+    //counter attack
     player.hitPoints -= opponent.counterAttack;
   },
-  "newMatch": function(player) {
+  "animateAttack": function(player, opponent) {
+    //fadeInUp message
+    //display a message indicating the damage for 1 or 2 seconds, red background white text
+    //fadeOutDown message
+
+    var opponentHit = $('<div>');
+    var playerHit = $('<div>');
+    opponentHit 
+      .attr('id', 'opponentHit')
+      .addClass('hitBox text-bg animated fadeInUp')
+      .html('-' + player.attackPower[0]);
+    $('#enemy').append(opponentHit);
+    setTimeout(function(){
+      opponentHit
+        .addClass('fadeOutDown');
+    }, 2000);
+    //fadeInUp message
+    //display message indicating the damage for 1 or 2 seconds, red background white text
+    //fadeInOut message
+
+    playerHit
+      .attr('id', 'playerHit')
+      .addClass('hitBox text-bg animated fadeInUp')
+      .html('-' + opponent.counterAttack);
+    $('#player').append(playerHit);
+    setTimeout(function(){
+      playerHit
+        .addClass('fadeOutDown');
+    }, 2000);
+  },
+  "animateHP": function() {
+    //enemy HP bounce
+    setTimeout(function(){
+      $('#enemyHP').addClass('animated bounce');
+    }, 500);
+    //player HP bounce
+    setTimeout(function(){
+      $('#playerHP').addClass('animated bounce');
+    }, 500);
+
+    setTimeout(function(){
+      $('#enemyHP').removeClass('animated bounce');
+      $('#playerHP').removeClass('animated bounce');
+    }, 3000);
+  },
+  "match": function(player) {
       //generate enemies
       showdown.generateEnemies();
       //select an enemy set opponent
@@ -209,9 +258,13 @@ var showdown = {
       //attack enemy, enemy counter attack, doc reloads on lose
       $('#enemy').on('click', function () {
         showdown.attack(player, opponent);
+        showdown.animateAttack(player, opponent);
+        
         //evaluate if player has hp left
         if(player.hitPoints > 0){
-          $('#playerHP').html(`HP: ${player.hitPoints}`);
+          $('#playerHP')
+            .html(`HP: ${player.hitPoints}`);
+          showdown.animateHP();
         }else{
           //player lost, document reloads
           $('#playerHP').html(`HP: 0`);
@@ -220,11 +273,13 @@ var showdown = {
         }
         //evaluate if enemy has hp
         if(opponent.hitPoints > 0){
-          $('#enemyHP').html(`HP: ${opponent.hitPoints}`);
+          $('#enemyHP')
+            .html(`HP: ${opponent.hitPoints}`);
         }else{
           //opponent is defeated
           $('#enemyHP').html(`HP: 0`);
           alert('you win!');
+
           //update catTier so opponent is dead
           showdown.catTier.forEach(function(cat){
             if (cat.name === opponent.name){
@@ -237,7 +292,7 @@ var showdown = {
           $('#remaining').remove();
           //run again if enemies remain
           if(showdown.enemies.length > 0){
-            return showdown.newMatch(player, opponent);
+            return showdown.match(player, opponent);
           }else{
             alert('Cogratulations! you are now the strongest cat in the meta!');
           }
@@ -252,9 +307,9 @@ $(document).ready(function() {
 
     $('.img-container').on('click', function(){
       showdown.selectPlayer($(this).val());
-      showdown.setupMatch();
-      player = showdown.player;
+      showdown.setupMatch();  
+      player = showdown.player;    
       console.log('player', player);
-      showdown.newMatch(player, opponent);
+      showdown.match(player, opponent);
     });
 });
