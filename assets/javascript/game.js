@@ -7,8 +7,8 @@ var showdown = {
       name: 'lynx',
       dead: false,
       hitPoints: 30,
-      attackPower: [4,8,12,16,20],
-      counterAttack: 12,
+      attackPower: [8,16,24,32,40],
+      counterAttack: 0.1,
       img1: './assets/images/bobcat-black-silhouette.png',
       img2: './assets/images/bobcat.jpg'
     },
@@ -16,8 +16,8 @@ var showdown = {
       name: 'lion',
       dead: false,
       hitPoints: 45,
-      attackPower: [7,14,21,28,35],
-      counterAttack: 21,
+      attackPower: [10,20,30,40,50],
+      counterAttack: 0.3,
       img1: './assets/images/african-lion-black-silhouette.png',
       img2: './assets/images/lion.jpg'
     },
@@ -25,8 +25,8 @@ var showdown = {
       name: 'cheetah',
       dead: false,
       hitPoints: 25,
-      attackPower: [3,6,9,12,15],
-      counterAttack: 9,
+      attackPower: [8,16,24,32,40],
+      counterAttack: .05,
       img1: './assets/images/cheetah-black-silhouette.png',
       img2: './assets/images/cheetah.jpg'
     },
@@ -34,8 +34,8 @@ var showdown = {
       name: 'cougar',
       dead: false,
       hitPoints: 35,
-      attackPower: [5,10,15,20,25],
-      counterAttack: 15,
+      attackPower: [9,18,27,36,45],
+      counterAttack: 0.2,
       img1: './assets/images/cougar-black-silhouette.png',
       img2: './assets/images/cougar.jpg'
     },
@@ -43,8 +43,8 @@ var showdown = {
       name: 'leopard',
       dead: false,
       hitPoints: 40,
-      attackPower: [6,12,18,24,30],
-      counterAttack: 18,
+      attackPower: [9,18,27,36,45],
+      counterAttack: 0.25,
       img1: './assets/images/leopard-black-silhouette.png',
       img2: './assets/images/leopard.jpeg'
     },
@@ -52,8 +52,8 @@ var showdown = {
       name: 'jaguar',
       dead: false,
       hitPoints: 50,
-      attackPower: [8,16,24,32,40],
-      counterAttack: 24,
+      attackPower: [10,20,30,40,50],
+      counterAttack: 0.5,
       img1: './assets/images/mountain-lion-black-silhouette.png',
       img2: './assets/images/jaguar.jpg'
     }
@@ -95,6 +95,7 @@ var showdown = {
   "selectPlayer": function (cat) {
     //stores the cat that the player selects
     showdown.player = cat;
+    showdown.player.hitPoints = 100;
     cat.dead = true;
     showdown.updateEnemies();
     $('#game').empty();
@@ -198,7 +199,11 @@ var showdown = {
     //attack opponent
     opponent.hitPoints -= player.attackPower[0];
     //counter attack
-    player.hitPoints -= opponent.counterAttack;
+    //calculate counterAttack val
+    var countAtt;
+    countAtt = Math.floor(opponent.counterAttack * player.hitPoints);
+    console.log;
+    player.hitPoints -= countAtt;
   },
   "animateAttack": function(player, opponent) {
     //fadeInUp message
@@ -223,7 +228,7 @@ var showdown = {
     playerHit
       .attr('id', 'playerHit')
       .addClass('hitBox text-bg animated fadeInUp')
-      .html('-' + opponent.counterAttack);
+      .html('-' + Math.floor(opponent.counterAttack * player.hitPoints));
     $('#player').append(playerHit);
     setTimeout(function(){
       playerHit
@@ -278,8 +283,7 @@ var showdown = {
         }else{
           //opponent is defeated
           $('#enemyHP').html(`HP: 0`);
-          alert('you win!');
-
+          setTimeout(function(){alert('you win!');}, 0);
           //update catTier so opponent is dead
           showdown.catTier.forEach(function(cat){
             if (cat.name === opponent.name){
